@@ -14,3 +14,5 @@ exclude:
   - README.md
 minima:
   date_format: "%Y.%m.%d"
+webmaster_verifications:
+  google: jN-sWos7_m0q8eHym4iqPJfupLFNw2MIGMd26deIew4
