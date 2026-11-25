@@ -1,6 +1,6 @@
 /**
  * 구글폼 예약 → 시트 정리 → 손님 확인 메일 + 사장님 알림
- * 레시피: https://fffight88.github.io/gsheet-recipes/
+ * 레시피: https://dahae.superblog.kr/
  *
  * 폼 질문 제목은 아래 FIELDS와 똑같아야 합니다. 다르면 FIELDS 쪽 글자를 폼에 맞게 고치세요.
  */
