@@ -1,0 +1,16 @@
+title: 소상공인 구글 자동화 레시피
+description: 구글폼·구글시트·앱스스크립트로 가게 일을 덜어 주는 따라 하기 레시피. 코드는 복사해서 바로 쓸 수 있어요.
+lang: ko-KR
+url: https://fffight88.github.io
+baseurl: /gsheet-recipes
+author: AI다해드림
+theme: minima
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+permalink: /:title/
+exclude:
+  - test/
+  - README.md
+minima:
+  date_format: "%Y.%m.%d"
