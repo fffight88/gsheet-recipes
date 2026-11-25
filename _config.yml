@@ -12,6 +12,7 @@ search: true
 search_full_content: true
 breadcrumbs: false
 words_per_minute: 400
+date_format: "%Y년 %-m월 %-d일"
 google_site_verification: jN-sWos7_m0q8eHym4iqPJfupLFNw2MIGMd26deIew4
 naver_site_verification: 671530d6987198b510e52db859e541ed7c7eace2
 author:

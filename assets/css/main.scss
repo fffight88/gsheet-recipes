@@ -6,6 +6,8 @@ $global-font-family: $sans-serif;
 $header-font-family: $sans-serif;
 $primary-color: #1f6f4a;
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+$background-color: #f7f8f6;
+$code-background-color: #f0f2ef;
 @import "minimal-mistakes";
 
 html { font-size: 16px; }
