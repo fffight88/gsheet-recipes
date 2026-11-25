@@ -1,4 +1,4 @@
-# AI다해드림 · 사장님 자동화 레시피
+# AI다해드림 · 업무 자동화 레시피
 
 https://dahae.superblog.kr/
 
