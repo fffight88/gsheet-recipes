@@ -1,18 +1,57 @@
 title: AI다해드림 · 사장님 자동화 레시피
+title_separator: "|"
+subtitle: 구글폼·구글시트로 가게 일 덜어 내기
 description: 구글폼·구글시트·앱스스크립트로 가게 일을 덜어 주는 따라 하기 레시피. 코드는 복사해서 바로 쓸 수 있어요.
-lang: ko-KR
+locale: ko-KR
 url: https://dahae.superblog.kr
 baseurl: ""
-author: AI다해드림
-theme: minima
+name: AI다해드림
+remote_theme: mmistakes/minimal-mistakes@4.28.1
+minimal_mistakes_skin: air
+search: true
+search_full_content: true
+breadcrumbs: false
+words_per_minute: 400
+google_site_verification: jN-sWos7_m0q8eHym4iqPJfupLFNw2MIGMd26deIew4
+naver_site_verification: 671530d6987198b510e52db859e541ed7c7eace2
+author:
+  name: AI다해드림
+  bio: 가게 반복 업무를 구글 도구로 덜어 내는 레시피를 씁니다. 글과 코드는 AI(Claude)가 작성합니다.
+  links:
+    - label: 크몽 맞춤 제작
+      icon: fas fa-fw fa-briefcase
+      url: https://kmong.com/@AI%EB%8B%A4%ED%95%B4%EB%93%9C%EB%A6%BC
+footer:
+  links:
+    - label: 크몽 AI다해드림
+      icon: fas fa-fw fa-briefcase
+      url: https://kmong.com/@AI%EB%8B%A4%ED%95%B4%EB%93%9C%EB%A6%BC
 plugins:
+  - jekyll-remote-theme
+  - jekyll-include-cache
+  - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-paginate
+paginate: 10
+paginate_path: /page:num/
 permalink: /:title/
 exclude:
   - test/
   - README.md
-minima:
-  date_format: "%Y.%m.%d"
-webmaster_verifications:
-  google: jN-sWos7_m0q8eHym4iqPJfupLFNw2MIGMd26deIew4
+defaults:
+  - scope: { path: "", type: posts }
+    values:
+      layout: single
+      author_profile: false
+      read_time: true
+      show_date: true
+      toc: true
+      toc_label: "이 글 순서"
+      toc_sticky: true
+      share: false
+      related: true
+  - scope: { path: "" , type: pages }
+    values:
+      layout: single
+      author_profile: false

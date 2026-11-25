@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: single
 title: 운영 방식
 permalink: /about/
 ---

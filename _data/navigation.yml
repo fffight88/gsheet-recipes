@@ -1,0 +1,5 @@
+main:
+  - title: "레시피"
+    url: /
+  - title: "운영 방식"
+    url: /about/

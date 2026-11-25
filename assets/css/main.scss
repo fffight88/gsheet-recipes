@@ -1,0 +1,22 @@
+---
+---
+@charset "utf-8";
+$sans-serif: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+$global-font-family: $sans-serif;
+$header-font-family: $sans-serif;
+$primary-color: #1f6f4a;
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}";
+@import "minimal-mistakes";
+
+html { font-size: 16px; }
+@media (min-width: 64em) { html { font-size: 17px; } }
+body, .page__content, .archive__item-title, .page__title { word-break: keep-all; overflow-wrap: break-word; }
+.page__content p, .page__content li { line-height: 1.8; }
+.page__content table { font-size: .9em; }
+.page__content code { font-size: .85em; }
+.archive__item { padding: 1.1em 1.2em; border: 1px solid #e6ece8; border-radius: 12px; background: #fff; margin-bottom: 1em; }
+.archive__item:hover { border-color: $primary-color; }
+.archive__item-title { font-size: 1.15em; margin-top: 0; }
+.archive__item-excerpt { color: #4b5a52; }
+.page__hero--overlay { background-color: #1f6f4a; }
+.notice--ai { font-size: .9em; }
