@@ -10,6 +10,7 @@ permalink: /privacy/
 
 - 회원 가입, 댓글, 문의 양식이 없어 방문자의 개인정보를 받지 않습니다.
 - 사이트는 GitHub Pages로 제공되며, 접속 기록은 GitHub가 자체 방침에 따라 처리할 수 있습니다.
+- 일부 글에는 YouTube 영상이 개인정보 보호 강화 모드(youtube-nocookie.com)로 들어가 있습니다. 영상을 재생하면 YouTube(Google)가 자체 방침에 따라 정보를 처리할 수 있습니다.
 
 ## AI다해드림 업로더 (YouTube Data API 사용)
 
