@@ -4,19 +4,12 @@ const fs = require('fs');
 const vm = require('vm');
 const assert = require('assert');
 const path = require('path');
+const { makeSheet } = require('./sheetmock');
 
 function makeEnv() {
   const sheets = {};
   const mails = [];
   const triggers = [];
-  const makeSheet = () => {
-    const rows = [];
-    return {
-      rows,
-      appendRow: (r) => rows.push(r),
-      getDataRange: () => ({ getValues: () => rows.map((r) => r.slice()) }),
-    };
-  };
   const ss = {
     getSheetByName: (n) => sheets[n] || null,
     insertSheet: (n) => (sheets[n] = makeSheet()),
@@ -92,6 +85,24 @@ test('setupTrigger는 여러 번 실행해도 트리거 1개', () => {
   const { ctx, triggers } = makeEnv();
   ctx.setupTrigger(); ctx.setupTrigger();
   assert.strictEqual(triggers.length, 1);
+});
+
+test('실제 시트처럼 날짜·시간이 자동 변환된 기존 줄도 정원 계산 (2026-11-26 실계정 버그 재현)', () => {
+  const { ctx, sheets } = makeEnv();
+  const sh = (sheets['예약목록'] = makeSheet());           // 고치기 전 코드로 쌓인 시트: 서식 없음
+  sh.appendRow(['접수 시각', '이름', '연락처', '이메일', '날짜', '시간', '인원', '상태']);
+  sh.appendRow([new Date(), '김하늘', '010', 'a@x.com', '2026. 12. 5', '14:00', 2, '확정']);
+  assert.ok(sh.rows[1][4] instanceof Date && sh.rows[1][5] instanceof Date); // 변환돼 저장됨
+  // 폼은 '2026. 12. 5' 모양으로 보냄(실계정 확인). 2+3 > 4 → 대기
+  assert.strictEqual(ctx.onFormSubmit(answer({ ...base, '희망 날짜': '2026. 12. 5', 인원: '3' })), '대기');
+});
+
+test('날짜·시간은 글자 그대로 저장되고, 날짜 모양이 달라도 같은 예약으로 셈', () => {
+  const { ctx, sheets } = makeEnv();
+  ctx.onFormSubmit(answer({ ...base, '희망 날짜': '2026. 12. 5', '희망 시간': '14:00', 인원: '3' }));
+  assert.strictEqual(sheets['예약목록'].rows[1][4], '2026. 12. 5');
+  assert.strictEqual(sheets['예약목록'].rows[1][5], '14:00');
+  assert.strictEqual(ctx.onFormSubmit(answer({ ...base, '희망 날짜': '2026-12-05', '희망 시간': '오후 2:00', 인원: '2' })), '대기');
 });
 
 console.log(`${n} passed`);

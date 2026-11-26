@@ -4,22 +4,13 @@ const fs = require('fs');
 const vm = require('vm');
 const assert = require('assert');
 const path = require('path');
+const { makeSheet } = require('./sheetmock');
 
 function makeEnv() {
   const sheets = {};
   const mails = [];
   const events = new Map();
   let seq = 0;
-  const makeSheet = () => {
-    const rows = [];
-    return {
-      rows,
-      appendRow: (r) => rows.push(r.slice()),
-      getLastRow: () => rows.length,
-      getRange: (r, c) => ({ setValue: (v) => { rows[r - 1][c - 1] = v; } }),
-      getDataRange: () => ({ getValues: () => rows.map((r) => r.slice()) }),
-    };
-  };
   const ss = { getSheetByName: (n) => sheets[n] || null, insertSheet: (n) => (sheets[n] = makeSheet()) };
   const cal = {
     createEvent: (title, start, end, opts) => {
@@ -122,6 +113,27 @@ test('취소된 인원은 정원 계산에서 빠짐', () => {
   ctx.onFormSubmit(answer({ ...base, 인원: '4' }));
   sheets['예약목록'].rows[1][7] = '취소';
   assert.strictEqual(ctx.onFormSubmit(answer({ ...base, 인원: '4' })), '확정');
+});
+
+test('실제 시트처럼 날짜·시간이 변환돼도 syncCalendar가 제 시각에 일정 생성 (2026-11-26 실계정 버그 재현)', () => {
+  const { ctx, sheets, events } = makeEnv();
+  const sh = (sheets['예약목록'] = makeSheet());           // 고치기 전 코드로 쌓인 시트: 서식 없음
+  sh.appendRow(['접수 시각', '이름', '연락처', '이메일', '날짜', '시간', '인원', '상태', '일정ID']);
+  sh.appendRow([new Date(), '김하늘', '010', 'a@x.com', '2026. 12. 5', '14:00', 2, '확정', '']);
+  assert.ok(sh.rows[1][4] instanceof Date);
+  const r = ctx.syncCalendar();
+  assert.strictEqual(r.created, 1);
+  const ev = [...events.values()][0];
+  assert.strictEqual(ev.start.getFullYear(), 2026); assert.strictEqual(ev.start.getMonth(), 11);
+  assert.strictEqual(ev.start.getDate(), 5); assert.strictEqual(ev.start.getHours(), 14); assert.strictEqual(ev.start.getMinutes(), 0);
+});
+
+test('변환된 기존 줄이 있어도 정원 계산 (2+3 > 4 → 대기)', () => {
+  const { ctx, sheets } = makeEnv();
+  const sh = (sheets['예약목록'] = makeSheet());
+  sh.appendRow(['접수 시각', '이름', '연락처', '이메일', '날짜', '시간', '인원', '상태', '일정ID']);
+  sh.appendRow([new Date(), '김하늘', '010', 'a@x.com', '2026. 12. 5', '14:00', 2, '확정', 'evX']);
+  assert.strictEqual(ctx.onFormSubmit(answer({ ...base, '희망 날짜': '2026. 12. 5', 인원: '3' })), '대기');
 });
 
 console.log(`${n} passed`);

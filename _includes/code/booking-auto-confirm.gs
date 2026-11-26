@@ -29,7 +29,8 @@ function onFormSubmit(e) {
   const booked = countPeople_(sheet, v.date, v.time);
   const status = booked + v.people <= CONFIG.CAPACITY_PER_SLOT ? '확정' : '대기';
 
-  sheet.appendRow([new Date(), v.name, v.phone, v.email, v.date, v.time, v.people, status]);
+  // 날짜·시간 앞의 ' 는 시트가 날짜 값으로 바꾸지 않고 글자 그대로 두게 합니다 (시트에는 안 보임)
+  sheet.appendRow([new Date(), v.name, v.phone, v.email, "'" + v.date, "'" + v.time, v.people, status]);
 
   if (v.email) {
     MailApp.sendEmail(v.email, subjectFor_(status), bodyFor_(status, v));
@@ -75,12 +76,36 @@ function getSheet_() {
   return sheet;
 }
 
-/** 같은 날짜·시간에 이미 '확정'된 인원 합계 */
+/** 같은 날짜·시간에 이미 '확정'된 인원 합계 (시트에 보이는 값으로 비교) */
 function countPeople_(sheet, date, time) {
-  const rows = sheet.getDataRange().getValues().slice(1);
+  const rows = sheet.getDataRange().getDisplayValues().slice(1);
   return rows
-    .filter((r) => String(r[4]) === date && String(r[5]) === time && r[7] === '확정')
+    .filter((r) => dateKey_(r[4]) === dateKey_(date) && timeKey_(r[5]) === timeKey_(time) && r[7] === '확정')
     .reduce((sum, r) => sum + Number(r[6] || 0), 0);
+}
+
+/**
+ * 구글 시트는 '2026. 12. 5', '14:00' 같은 글자를 날짜·시간 값으로 바꿔 저장합니다.
+ * 그래도 같은 예약끼리 비교되도록 'YYYY-MM-DD', 'HH:MM' 모양으로 맞춥니다.
+ * 날짜는 '2026-12-05', '2026. 12. 5', '12/5/2026', 시간은 '14:00', '오후 2:00', '14시'를 읽습니다.
+ */
+function dateKey_(s) {
+  const str = String(s);
+  let m = str.match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+  if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+  m = str.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+  return str.trim();
+}
+
+function timeKey_(s) {
+  const str = String(s);
+  const t = str.match(/(\d{1,2})(?:\s*[:시]\s*(\d{1,2}))?/);
+  if (!t) return str.trim();
+  let h = Number(t[1]);
+  if (/오후|PM/i.test(str) && h < 12) h += 12;
+  if (/오전|AM/i.test(str) && h === 12) h = 0;
+  return `${String(h).padStart(2, '0')}:${String(t[2] || 0).padStart(2, '0')}`;
 }
 
 function subjectFor_(status) {
