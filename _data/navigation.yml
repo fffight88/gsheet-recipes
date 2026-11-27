@@ -3,5 +3,7 @@ main:
     url: /
   - title: "코드 만들기"
     url: /generator/
+  - title: "운영 기록"
+    url: /log/
   - title: "운영 방식"
     url: /about/

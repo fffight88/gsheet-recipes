@@ -40,7 +40,16 @@ permalink: /:title/
 exclude:
   - test/
   - README.md
+collections:
+  log:
+    output: true
+    permalink: /log/:name/
 defaults:
+  - scope: { path: "", type: log }
+    values:
+      layout: single
+      author_profile: false
+      read_time: true
   - scope: { path: "", type: posts }
     values:
       layout: single
