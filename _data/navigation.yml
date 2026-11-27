@@ -1,5 +1,7 @@
 main:
   - title: "레시피"
     url: /
+  - title: "코드 만들기"
+    url: /generator/
   - title: "운영 방식"
     url: /about/
